@@ -1,0 +1,24 @@
+{
+  "name": "book-notes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdtspramanik/book-notes.git"
+  },
+  "author": "Md. Tanvir Siddique Pramanik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdtspramanik/book-notes/issues"
+  },
+  "homepage": "https://github.com/mdtspramanik/book-notes#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2"
+  }
+}
