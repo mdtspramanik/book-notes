@@ -1,0 +1,9 @@
+<%- include("partials/header.ejs") %>
+    </nav>
+    </header>
+    <form class="search-form" action="/find" method="post">
+        <label for="search">Find a book:</label>
+        <input class="search-box" type="text" name="search" placeholder="Enter the ISBN, Title, or Author" required>
+        <button class="search-button" type="submit">Find</button>
+    </form>
+    <%- include("partials/footer.ejs") %>

@@ -25,7 +25,7 @@ h1 {
     margin-left: 20px;
 }
 
-.nav-text {
+.margin-left {
     margin-left: 20px;
 }
 
@@ -52,10 +52,27 @@ a:hover {
     text-decoration: underline;
 }
 
+.search-form {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.search-box {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    width: 183px;
+}
+
+.search-button {
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .footer {
     background-color: #333333;
     color: #FFFFFF;
-    padding: 0;
+    padding: 5px;
     text-align: center;
     margin-top: auto;
 }

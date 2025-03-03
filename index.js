@@ -11,6 +11,11 @@ app.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
+// Render add.ejs file
+app.get("/add", (req, res) => {
+  res.render("add.ejs");
+});
+
 // Start the server on the specified port
 app.listen(port, () => {
   console.log(`Backend server is running on port http://localhost:${port}`);
