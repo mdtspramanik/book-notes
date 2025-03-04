@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/mdtspramanik/book-notes#readme",
   "dependencies": {
+    "axios": "^1.8.1",
     "ejs": "^3.1.10",
     "express": "^4.21.2"
   }

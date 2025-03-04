@@ -1,0 +1,22 @@
+<%- include("partials/header.ejs") %>
+
+    </nav>
+    </header>
+    <form class="form" action="/find-book" method="post">
+        <label for="search">Find a book:</label>
+        <input class="search-box" type="text" name="search" placeholder="Enter the ISBN" required>
+        <button class="button" type="submit">Find</button>
+    </form>
+    <% if (locals.imageUrl) { %>
+        <img class="image" src="<%= imageUrl %>" alt="Book Cover" />
+        <p class="margin-left"><a href="https://openlibrary.org/isbn/<%= isbn %>" target="_blank">
+                View on Open Library
+            </a></p>
+        <form class="form" action="/add-book" method="post">
+            <button class="button" type="submit">Add This Book</button>
+        </form>
+        <% } else { %>
+            <p class="margin-left">Enter an ISBN above to find a book cover.</p>
+            <% } %>
+
+                <%- include("partials/footer.ejs") %>

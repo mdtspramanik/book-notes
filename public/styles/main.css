@@ -52,21 +52,32 @@ a:hover {
     text-decoration: underline;
 }
 
-.search-form {
-    margin-left: 20px;
+.form {
     margin-top: 20px;
+    margin-left: 20px;
 }
 
 .search-box {
     padding-top: 3px;
     padding-bottom: 3px;
-    width: 183px;
+    padding-left: 6px;
+    width: 135px;
 }
 
-.search-button {
-    padding: 3px;
+.button {
+    padding: 5px;
     padding-left: 10px;
     padding-right: 10px;
+    background-color: #127ea9;
+    color: #FFFFFF;
+    border: none;
+}
+
+.image {
+    width: 230px;
+    height: 300px;
+    margin-top: 30px;
+    margin-left: 20px;
 }
 
 .footer {
