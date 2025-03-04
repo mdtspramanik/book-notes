@@ -52,16 +52,18 @@ a:hover {
     text-decoration: underline;
 }
 
-.form {
+.margin-form {
     margin-top: 20px;
     margin-left: 20px;
 }
 
 .search-box {
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     padding-left: 6px;
     width: 135px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
 .button {
@@ -71,6 +73,11 @@ a:hover {
     background-color: #127ea9;
     color: #FFFFFF;
     border: none;
+    border-radius: 3px;
+}
+
+.button:hover {
+    background-color: #0056b3;
 }
 
 .image {
@@ -78,6 +85,46 @@ a:hover {
     height: 300px;
     margin-top: 30px;
     margin-left: 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+.input-box {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.position-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.padding-button {
+    padding: 8px 22px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
 }
 
 .footer {

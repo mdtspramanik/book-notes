@@ -26,6 +26,14 @@ app.post("/find-book", (req, res) => {
   res.render("find-page.ejs", { imageUrl, isbn });
 });
 
+// Render add-page.ejs file
+app.post("/add-page", (req, res) => {
+  const imageUrl = req.body.imageUrl;
+  const isbn = req.body.isbn;
+
+  res.render("add-page.ejs", { imageUrl, isbn });
+});
+
 // Start the server on the specified port
 app.listen(port, () => {
   console.log(`Backend server is running on port http://localhost:${port}`);
