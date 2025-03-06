@@ -61,7 +61,7 @@ a:hover {
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 6px;
-    width: 135px;
+    width: 170px;
     border: 1px solid #ccc;
     border-radius: 3px;
 }
@@ -125,6 +125,11 @@ label {
 .center {
     display: flex;
     justify-content: center;
+}
+
+.required {
+    color: red;
+    font-size: 20px;
 }
 
 .footer {

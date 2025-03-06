@@ -5,7 +5,8 @@
     <main>
         <form class="margin-form" action="/find-book" method="post">
             <label for="search">Find a book:</label>
-            <input class="search-box" type="text" name="search" placeholder="Enter the ISBN" required>
+            <input class="search-box" type="text" name="search" placeholder="Enter the ISBN (no dashes)" required
+                maxlength="13">
             <button class="button" type="submit">Find</button>
         </form>
         <% if (locals.imageUrl) { %>
