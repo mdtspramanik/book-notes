@@ -5,7 +5,7 @@
     <main>
         <form class="margin-form" action="/find-book" method="post">
             <label for="search">Find a book:</label>
-            <input class="search-box" type="text" name="search" placeholder="Enter the ISBN (no dashes)" required
+            <input class="search-box" type="text" name="find" placeholder="Enter the ISBN (no dashes)" required
                 maxlength="13">
             <button class="button" type="submit">Find</button>
         </form>
@@ -19,6 +19,9 @@
                 <input type="hidden" name="isbn" value="<%= isbn %>">
                 <button class="button" type="submit">Add This Book</button>
             </form>
+            <p class="margin-left inform">
+                <%= locals.message %>
+            </p>
             <% } else { %>
                 <p class="margin-left">Enter an ISBN above to find a book cover.</p>
                 <% } %>

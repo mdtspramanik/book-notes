@@ -21,17 +21,21 @@ h1 {
     margin: 27px;
 }
 
-.home-link {
+.margin-left {
     margin-left: 20px;
 }
 
-.margin-left {
-    margin-left: 20px;
+.margin-right {
+    margin-right: 80px;
 }
 
 .flex-list {
     display: flex;
     gap: 20px;
+}
+
+.flex-end {
+    justify-content: flex-end;
 }
 
 .flex-list li {
@@ -125,6 +129,10 @@ label {
 .center {
     display: flex;
     justify-content: center;
+}
+
+.inform {
+    color: yellow;
 }
 
 .required {

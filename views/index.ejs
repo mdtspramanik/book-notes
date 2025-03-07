@@ -7,7 +7,15 @@
         <li><a href="/oldest">Oldest</a></li>
     </ul>
     </nav>
+    <div class="margin-right flex-list flex-end">
+        <form action="/" method="post">
+            <input class="search-box" type="text" name="search" placeholder="Enter the ISBN (no dashes)" required
+                maxlength="13">
+            <button class="button" type="submit">Search</button>
+        </form>
+    </div>
     </header>
+
     <main></main>
 
     <%- include("partials/footer.ejs") %>

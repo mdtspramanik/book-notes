@@ -35,22 +35,45 @@ app.get("/find-page", (req, res) => {
 
 // Handle search request from find-page.ejs file
 app.post("/find-book", (req, res) => {
-  const isbn = req.body.search;
+  const isbn = req.body.find;
   const imageUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`;
 
   res.render("find-page.ejs", { imageUrl, isbn });
 });
 
 // Render add-page.ejs file with the image URL and ISBN
-app.post("/add-page", (req, res) => {
+app.post("/add-page", async (req, res) => {
   const imageUrl = req.body.imageUrl;
   const isbn = req.body.isbn;
 
-  res.render("add-page.ejs", { imageUrl, isbn });
+  const client = await db.connect();
+
+  try {
+    const result = await client.query("SELECT isbn FROM note WHERE isbn = $1", [
+      isbn,
+    ]);
+
+    if (result.rows.length > 0 && result.rows[0].isbn === isbn) {
+      res.render("find-page.ejs", {
+        imageUrl,
+        isbn,
+        message:
+          "This book already exists. Please try adding a different book.",
+      });
+    } else {
+      res.render("add-page.ejs", { imageUrl, isbn });
+    }
+  } catch (error) {
+    res.status(500).send("Error finding book in the database.");
+  } finally {
+    client.release();
+  }
 });
 
+// Handle adding a book to the database
 app.post("/add-book", async (req, res) => {
   const { isbn, rating, date, notes } = req.body;
+
   const client = await db.connect();
 
   try {
@@ -61,7 +84,6 @@ app.post("/add-book", async (req, res) => {
 
     res.redirect("/");
   } catch (error) {
-    console.error(error);
     res.status(500).send("Error adding book to the database.");
   } finally {
     client.release();
