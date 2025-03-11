@@ -29,6 +29,10 @@ h1 {
     margin-right: 80px;
 }
 
+.margin-right-less {
+    margin-right: 20px;
+}
+
 .flex-list {
     display: flex;
     gap: 20px;
@@ -44,6 +48,10 @@ h1 {
 
 p {
     color: #B0B0B0;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 a {
@@ -84,6 +92,22 @@ a:hover {
     background-color: #0056b3;
 }
 
+.green {
+    background-color: green;
+}
+
+.green:hover {
+    background-color: darkgreen;
+}
+
+.red {
+    background-color: red;
+}
+
+.red:hover {
+    background-color: darkred;
+}
+
 .image {
     width: 230px;
     height: 300px;
@@ -91,7 +115,7 @@ a:hover {
     margin-left: 20px;
 }
 
-.form {
+.card {
     display: flex;
     flex-direction: column;
     max-width: 400px;
@@ -99,7 +123,7 @@ a:hover {
     padding: 20px;
 }
 
-.form-group {
+.card-body {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;
@@ -131,7 +155,7 @@ label {
     justify-content: center;
 }
 
-.inform {
+.yellow {
     color: yellow;
 }
 

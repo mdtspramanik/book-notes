@@ -16,6 +16,40 @@
     </div>
     </header>
 
-    <main></main>
+    <main>
+        <div>
+            <% if (books.length===0) { %>
+                <p class="margin-left yellow">No books found.</p>
+                <% } else { %>
+                    <% books.forEach(function(book) { %>
+                        <div class="card">
+                            <div class="center">
+                                <img class="image"
+                                    src="<%= `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg?default=false` %>"
+                                    alt="Book Cover" />
+                            </div>
+                            <p class="center"><a href="https://openlibrary.org/isbn/<%= book.isbn %>" target="_blank">
+                                    View on Open Library
+                                </a></p>
+                            <div class="card-body">
+                                <p> <span class="bold">Rating: </span>
+                                    <%= book.rating %>
+                                </p>
+                                <p> <span class="bold">Date Read: </span>
+                                    <%= book.date %>
+                                </p>
+                                <p> <span class="bold">Notes: </span>
+                                    <%= book.notes %>
+                                </p>
+                            </div>
+                            <div class="position-button">
+                                <button class="button padding-button margin-right-less" type="submit">Edit</button>
+                                <button class="button padding-button red" type="submit">Delete</button>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } %>
+        </div>
+    </main>
 
     <%- include("partials/footer.ejs") %>

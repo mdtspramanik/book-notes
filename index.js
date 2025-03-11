@@ -24,13 +24,36 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 // Render index.ejs file
-app.get("/", (req, res) => {
-  res.render("index.ejs");
+app.get("/", async (req, res) => {
+  const client = await db.connect();
+
+  try {
+    const result = await client.query("SELECT * FROM book ORDER BY id DESC");
+    let books = result.rows;
+
+    // Format the date as "Month Day, Year"
+    books = books.map((book) => ({
+      ...book,
+      date: book.date
+        ? new Intl.DateTimeFormat("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }).format(new Date(book.date))
+        : null,
+    }));
+
+    res.render("index.ejs", { books });
+  } catch (error) {
+    res.status(500).send("Error fetching books from the database.");
+  } finally {
+    client.release();
+  }
 });
 
 // Render find-page.ejs file
 app.get("/find-page", (req, res) => {
-  res.render("find-page.ejs");
+  res.render("find-page.ejs", { imageUrl: "", isbn: "", message: "" });
 });
 
 // Handle search request from find-page.ejs file
@@ -38,7 +61,7 @@ app.post("/find-book", (req, res) => {
   const isbn = req.body.find;
   const imageUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`;
 
-  res.render("find-page.ejs", { imageUrl, isbn });
+  res.render("find-page.ejs", { imageUrl, isbn, message: "" });
 });
 
 // Render add-page.ejs file with the image URL and ISBN
@@ -49,7 +72,7 @@ app.post("/add-page", async (req, res) => {
   const client = await db.connect();
 
   try {
-    const result = await client.query("SELECT isbn FROM note WHERE isbn = $1", [
+    const result = await client.query("SELECT isbn FROM book WHERE isbn = $1", [
       isbn,
     ]);
 
@@ -78,7 +101,7 @@ app.post("/add-book", async (req, res) => {
 
   try {
     await client.query(
-      "INSERT INTO note (isbn, rating, date, notes) VALUES ($1, $2, $3, $4)",
+      "INSERT INTO book (isbn, rating, date, notes) VALUES ($1, $2, $3, $4)",
       [isbn, rating, date, notes]
     );
 

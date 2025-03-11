@@ -3,24 +3,29 @@
     </nav>
     </header>
     <main>
-        <form class="margin-form" action="/find-book" method="post">
-            <label for="search">Find a book:</label>
-            <input class="search-box" type="text" name="find" placeholder="Enter the ISBN (no dashes)" required
-                maxlength="13">
-            <button class="button" type="submit">Find</button>
-        </form>
-        <% if (locals.imageUrl) { %>
+        <div class="margin-form">
+            <form action="/find-book" method="post">
+                <label for="search">Find a book:</label>
+                <input class="search-box" type="text" name="find" placeholder="Enter the ISBN (no dashes)" required
+                    maxlength="13">
+                <button class="button" type="submit">Find</button>
+            </form>
+        </div>
+
+        <% if (imageUrl && isbn) { %>
             <img class="image" src="<%= imageUrl %>" alt="Book Cover" />
             <p class="margin-left"><a href="https://openlibrary.org/isbn/<%= isbn %>" target="_blank">
                     View on Open Library
                 </a></p>
-            <form class="margin-form" action="/add-page" method="post">
-                <input type="hidden" name="imageUrl" value="<%= imageUrl %>">
-                <input type="hidden" name="isbn" value="<%= isbn %>">
-                <button class="button" type="submit">Add This Book</button>
-            </form>
-            <p class="margin-left inform">
-                <%= locals.message %>
+            <div class="margin-form">
+                <form action="/add-page" method="post">
+                    <input type="hidden" name="imageUrl" value="<%= imageUrl %>">
+                    <input type="hidden" name="isbn" value="<%= isbn %>">
+                    <button class="button" type="submit">Add This Book</button>
+                </form>
+            </div>
+            <p class="margin-left yellow">
+                <%= message %>
             </p>
             <% } else { %>
                 <p class="margin-left">Enter an ISBN above to find a book cover.</p>
