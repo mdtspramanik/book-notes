@@ -160,7 +160,13 @@ app.post("/edit-page", (req, res) => {
   const { isbn, rating, notes } = req.body;
   let { date } = req.body;
 
-  date = new Date().toISOString().split("T")[0];
+  const localDate = new Date();
+  const offset = localDate.getTimezoneOffset(); // Get timezone offset in minutes
+  const adjustedDate = new Date(localDate.getTime() - offset * 60000)
+    .toISOString()
+    .split("T")[0];
+
+  date = adjustedDate;
 
   const imageUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`;
 
@@ -195,12 +201,12 @@ app.post("/edit-book", async (req, res) => {
 
 // Handle deleting a book from the database
 app.post("/delete-book", async (req, res) => {
-  const { isbn } = req.body;
+  const { id } = req.body;
 
   const client = await db.connect();
 
   try {
-    await client.query("DELETE FROM book WHERE isbn = $1", [isbn]);
+    await client.query("DELETE FROM book WHERE id = $1", [id]);
     res.redirect("/");
   } catch (error) {
     res.status(500).send("Error deleting book from the database.");
@@ -260,6 +266,11 @@ app.get("/oldest", async (req, res) => {
   const books = await getSortedBooks(sortedBy, res);
 
   res.render("index.ejs", { books });
+});
+
+// Render read-page.ejs file
+app.get("/read-book", async (req, res) => {
+  res.render("read-page.ejs");
 });
 
 // Start the server on the specified port
