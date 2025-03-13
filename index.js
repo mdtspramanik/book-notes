@@ -23,7 +23,18 @@ app.use(express.static("public"));
 // Middleware for parsing URL-encoded data
 app.use(express.urlencoded({ extended: true }));
 
-// Render index.ejs file
+// Function to format date as "Month Day, Year"
+const formatDate = (date) => {
+  return date
+    ? new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }).format(new Date(date))
+    : null;
+};
+
+// Render index.ejs file with fetched data from the database
 app.get("/", async (req, res) => {
   const client = await db.connect();
 
@@ -34,13 +45,7 @@ app.get("/", async (req, res) => {
     // Format the date as "Month Day, Year"
     books = books.map((book) => ({
       ...book,
-      date: book.date
-        ? new Intl.DateTimeFormat("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          }).format(new Date(book.date))
-        : null,
+      date: formatDate(book.date),
     }));
 
     res.render("index.ejs", { books });
@@ -64,10 +69,9 @@ app.post("/find-book", (req, res) => {
   res.render("find-page.ejs", { imageUrl, isbn, message: "" });
 });
 
-// Render modify-page.ejs file with the image URL and ISBN for adding the book
+// Render modify-page.ejs file with the image URL and ISBN for adding the book to the database
 app.post("/add-page", async (req, res) => {
-  const imageUrl = req.body.imageUrl;
-  const isbn = req.body.isbn;
+  const { imageUrl, isbn } = req.body;
 
   const client = await db.connect();
 
@@ -84,7 +88,14 @@ app.post("/add-page", async (req, res) => {
           "This book already exists. Please try adding a different book.",
       });
     } else {
-      res.render("modify-page.ejs", { imageUrl, isbn, buttonText: "Add" });
+      res.render("modify-page.ejs", {
+        imageUrl,
+        isbn,
+        rating: "",
+        date: "",
+        notes: "",
+        buttonText: "Add",
+      });
     }
   } catch (error) {
     res.status(500).send("Error finding book in the database.");
@@ -113,7 +124,7 @@ app.post("/add-book", async (req, res) => {
   }
 });
 
-// Render modify-page.ejs file with the image URL and ISBN for editing the book
+// Render modify-page.ejs file with the image URL and ISBN for editing the book in the database
 app.post("/edit-page", (req, res) => {
   const { isbn, rating, notes } = req.body;
   let date = req.body.date;
@@ -130,6 +141,67 @@ app.post("/edit-page", (req, res) => {
     notes,
     buttonText: "Update",
   });
+});
+
+// Handle updating a book in the database
+app.post("/edit-book", async (req, res) => {
+  const { isbn, rating, date, notes } = req.body;
+
+  const client = await db.connect();
+
+  try {
+    await client.query(
+      "UPDATE book SET rating = $1, date = $2, notes = $3 WHERE isbn = $4",
+      [rating, date, notes, isbn]
+    );
+    res.redirect("/");
+  } catch (error) {
+    res.status(500).send("Error updating book in the database.");
+  } finally {
+    client.release();
+  }
+});
+
+// Handle deleting a book from the database
+app.post("/delete-book", async (req, res) => {
+  const { isbn } = req.body;
+
+  const client = await db.connect();
+
+  try {
+    await client.query("DELETE FROM book WHERE isbn = $1", [isbn]);
+    res.redirect("/");
+  } catch (error) {
+    res.status(500).send("Error deleting book from the database.");
+  } finally {
+    client.release();
+  }
+});
+
+// Handle searching for a book by ISBN in the database
+app.post("/search-book", async (req, res) => {
+  const isbn = req.body.search;
+
+  const client = await db.connect();
+
+  try {
+    const result = await client.query("SELECT * FROM book WHERE isbn = $1", [
+      isbn,
+    ]);
+    let books = result.rows;
+
+    // Format the date as "Month Day, Year"
+    books = books.map((book) => ({
+      ...book,
+      date: formatDate(book.date),
+    }));
+
+    res.render("index.ejs", { books });
+  } catch (error) {
+    res.status(500).send("Error fetching books from the database.");
+  } finally {
+    client.release();
+  }
 });
 
 // Start the server on the specified port

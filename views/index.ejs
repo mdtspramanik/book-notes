@@ -8,7 +8,7 @@
     </ul>
     </nav>
     <div class="margin-right flex-list flex-end">
-        <form action="/" method="post">
+        <form action="/search-book" method="post">
             <input class="search-box" type="text" name="search" placeholder="Enter the ISBN (no dashes)" required
                 maxlength="13">
             <button class="button" type="submit">Search</button>
@@ -32,6 +32,9 @@
                                     View on Open Library
                                 </a></p>
                             <div class="card-body">
+                                <p> <span class="bold">ISBN: </span>
+                                    <%= book.isbn %>
+                                </p>
                                 <p> <span class="bold">Rating: </span>
                                     <%= book.rating %>
                                 </p>
@@ -42,6 +45,7 @@
                                     <%= book.notes %>
                                 </p>
                             </div>
+
                             <div class="position-button">
                                 <form action="/edit-page" method="post">
                                     <input type="hidden" name="isbn" value="<%= book.isbn %>" />
@@ -51,7 +55,11 @@
 
                                     <button class="button padding-button margin-right-less" type="submit">Edit</button>
                                 </form>
-                                <button class="button padding-button red" type="submit">Delete</button>
+
+                                <form action="/delete-book" method="post">
+                                    <input type="hidden" name="isbn" value="<%= book.isbn %>" />
+                                    <button class="button padding-button red" type="submit">Delete</button>
+                                </form>
                             </div>
                         </div>
                         <% }) %>

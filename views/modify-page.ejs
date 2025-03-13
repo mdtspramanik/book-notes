@@ -11,8 +11,9 @@
             </a></p>
 
         <div class="card">
-            <form action="/add-book" method="post">
+            <form action="<%= buttonText === 'Add' ? '/add-book' : '/edit-book' %>" method="post">
                 <input type="hidden" name="isbn" value="<%= isbn %>">
+
                 <div class="card-body">
                     <label for="title">Rating (Out of 10) <span class="required"
                             title="This field is required.">*</span>:</label>
@@ -29,16 +30,11 @@
                     <textarea class="input-box" name="notes" placeholder="Enter your notes"
                         maxlength="12000"><%= notes %></textarea>
                 </div>
+
                 <div class="position-button">
-                    <% if (buttonText==="Add" ){ %>
-                        <button class="button padding-button green" type="submit">
-                            <%= buttonText %>
-                        </button>
-                        <% }else{ %>
-                            <button class="button padding-button" type="submit">
-                                <%= buttonText %>
-                            </button>
-                            <% } %>
+                    <button type="submit" class="button padding-button <%= buttonText === 'Add' ? 'green' : '' %>">
+                        <%= buttonText %>
+                    </button>
                 </div>
             </form>
         </div>
