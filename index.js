@@ -64,7 +64,7 @@ app.post("/find-book", (req, res) => {
   res.render("find-page.ejs", { imageUrl, isbn, message: "" });
 });
 
-// Render add-page.ejs file with the image URL and ISBN
+// Render modify-page.ejs file with the image URL and ISBN for adding the book
 app.post("/add-page", async (req, res) => {
   const imageUrl = req.body.imageUrl;
   const isbn = req.body.isbn;
@@ -84,7 +84,7 @@ app.post("/add-page", async (req, res) => {
           "This book already exists. Please try adding a different book.",
       });
     } else {
-      res.render("add-page.ejs", { imageUrl, isbn });
+      res.render("modify-page.ejs", { imageUrl, isbn, buttonText: "Add" });
     }
   } catch (error) {
     res.status(500).send("Error finding book in the database.");
@@ -111,6 +111,25 @@ app.post("/add-book", async (req, res) => {
   } finally {
     client.release();
   }
+});
+
+// Render modify-page.ejs file with the image URL and ISBN for editing the book
+app.post("/edit-page", (req, res) => {
+  const { isbn, rating, notes } = req.body;
+  let date = req.body.date;
+
+  date = new Date().toISOString().split("T")[0];
+
+  const imageUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`;
+
+  res.render("modify-page.ejs", {
+    imageUrl,
+    isbn,
+    rating,
+    date,
+    notes,
+    buttonText: "Update",
+  });
 });
 
 // Start the server on the specified port

@@ -16,20 +16,29 @@
                 <div class="card-body">
                     <label for="title">Rating (Out of 10) <span class="required"
                             title="This field is required.">*</span>:</label>
-                    <input class="input-box" type="number" name="rating" placeholder="Enter your rating" required
-                        min="0" max="10" step="1">
+                    <input class="input-box" type="number" name="rating" value="<%= rating %>"
+                        placeholder="Enter your rating" required min="0" max="10" step="1">
                 </div>
                 <div class="card-body">
                     <label for="date">Date Read <span class="required" title="This field is required.">*</span>:</label>
-                    <input class="input-box" type="date" name="date" placeholder="Enter the date" required>
+                    <input class="input-box" type="date" name="date" value="<%= date %>" placeholder="Enter the date"
+                        required>
                 </div>
                 <div class="card-body">
                     <label for="notes">Notes (up to 12,000 characters):</label>
                     <textarea class="input-box" name="notes" placeholder="Enter your notes"
-                        maxlength="12000"></textarea>
+                        maxlength="12000"><%= notes %></textarea>
                 </div>
                 <div class="position-button">
-                    <button class="button padding-button green" type="submit">Add</button>
+                    <% if (buttonText==="Add" ){ %>
+                        <button class="button padding-button green" type="submit">
+                            <%= buttonText %>
+                        </button>
+                        <% }else{ %>
+                            <button class="button padding-button" type="submit">
+                                <%= buttonText %>
+                            </button>
+                            <% } %>
                 </div>
             </form>
         </div>
