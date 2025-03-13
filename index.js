@@ -34,6 +34,37 @@ const formatDate = (date) => {
     : null;
 };
 
+// Function to get sorted book
+const getSortedBooks = async (sortedBy, res) => {
+  const client = await db.connect();
+
+  try {
+    let query = "";
+
+    if (sortedBy === "best") {
+      query = "SELECT * FROM book ORDER BY rating DESC";
+    } else if (sortedBy === "newest") {
+      query = "SELECT * FROM book ORDER BY date DESC";
+    } else if (sortedBy === "oldest") {
+      query = "SELECT * FROM book ORDER BY date ASC";
+    }
+
+    const result = await client.query(query);
+    let books = result.rows;
+
+    // Format the date as "Month Day, Year"
+    books = books.map((book) => ({
+      ...book,
+      date: formatDate(book.date),
+    }));
+    return books;
+  } catch (error) {
+    res.status(500).send("Error fetching books from the database.");
+  } finally {
+    client.release();
+  }
+};
+
 // Render index.ejs file with fetched data from the database
 app.get("/", async (req, res) => {
   const client = await db.connect();
@@ -202,6 +233,33 @@ app.post("/search-book", async (req, res) => {
   } finally {
     client.release();
   }
+});
+
+// Handle sorting books by rating in descending order
+app.get("/best", async (req, res) => {
+  const sortedBy = "best";
+
+  const books = await getSortedBooks(sortedBy, res);
+
+  res.render("index.ejs", { books });
+});
+
+// Handle sorting books by date in descending order
+app.get("/newest", async (req, res) => {
+  const sortedBy = "newest";
+
+  const books = await getSortedBooks(sortedBy, res);
+
+  res.render("index.ejs", { books });
+});
+
+// Handle sorting books by date in ascending order
+app.get("/oldest", async (req, res) => {
+  const sortedBy = "oldest";
+
+  const books = await getSortedBooks(sortedBy, res);
+
+  res.render("index.ejs", { books });
 });
 
 // Start the server on the specified port
