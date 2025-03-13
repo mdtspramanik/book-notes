@@ -158,7 +158,7 @@ app.post("/add-book", async (req, res) => {
 // Render modify-page.ejs file with the image URL and ISBN for editing the book in the database
 app.post("/edit-page", (req, res) => {
   const { isbn, rating, notes } = req.body;
-  let date = req.body.date;
+  let { date } = req.body;
 
   date = new Date().toISOString().split("T")[0];
 
