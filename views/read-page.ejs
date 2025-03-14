@@ -3,6 +3,43 @@
     </nav>
     </header>
 
-    <main></main>
+    <main>
+        <img class="image" src="<%= `https://covers.openlibrary.org/b/isbn/${book[0].isbn}-L.jpg?default=false` %>"
+            alt="Book Cover" />
+        <p class="margin-left"><a href="https://openlibrary.org/isbn/<%= book[0].isbn %>" target="_blank">
+                View on Open Library
+            </a></p>
+
+        <div class="margin-left">
+            <p> <span class="bold">ISBN: </span>
+                <%= book[0].isbn %>
+            </p>
+            <p> <span class="bold">Rating: </span>
+                <%= book[0].rating %>
+            </p>
+            <p> <span class="bold">Date Read: </span>
+                <%= book[0].date %>
+            </p>
+            <p> <span class="bold">Notes: </span>
+                <%= book[0].notes %>
+            </p>
+        </div>
+
+        <div class="position-button margin-right margin-bottom">
+            <form action="/edit-page" method="post">
+                <input type="hidden" name="isbn" value="<%= book[0].isbn %>" />
+                <input type="hidden" name="rating" value="<%= book[0].rating %>" />
+                <input type="hidden" name="date" value="<%= book[0].date %>" />
+                <input type="hidden" name="notes" value="<%= book[0].notes %>" />
+
+                <button class="button padding-button margin-right" type="submit">Edit</button>
+            </form>
+
+            <form action="/delete-book" method="post">
+                <input type="hidden" name="id" value=<%=book[0].id %> />
+                <button class="button padding-button red" type="submit">Delete</button>
+            </form>
+        </div>
+    </main>
 
     <%- include("partials/footer.ejs") %>

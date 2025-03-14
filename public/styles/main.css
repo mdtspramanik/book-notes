@@ -21,15 +21,19 @@ h1 {
     margin: 27px;
 }
 
+.margin-bottom {
+    margin-bottom: 20px;
+}
+
 .margin-left {
     margin-left: 20px;
 }
 
-.margin-right {
+.margin-right-extra {
     margin-right: 80px;
 }
 
-.margin-right-less {
+.margin-right {
     margin-right: 20px;
 }
 

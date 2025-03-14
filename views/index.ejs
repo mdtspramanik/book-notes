@@ -7,9 +7,9 @@
         <li><a href="/oldest">Oldest</a></li>
     </ul>
     </nav>
-    <div class="margin-right flex-list flex-end">
+    <div class="margin-right-extra flex-list flex-end">
         <form action="/search-book" method="post">
-            <input class="search-box" type="text" name="search" placeholder="Enter the ISBN (no dashes)" required
+            <input class="search-box" type="text" name="isbn" placeholder="Enter the ISBN (no dashes)" required
                 maxlength="13">
             <button class="button" type="submit">Search</button>
         </form>
@@ -31,6 +31,7 @@
                             <p class="center"><a href="https://openlibrary.org/isbn/<%= book.isbn %>" target="_blank">
                                     View on Open Library
                                 </a></p>
+
                             <div class="card-body">
                                 <p> <span class="bold">ISBN: </span>
                                     <%= book.isbn %>
@@ -41,8 +42,13 @@
                                 <p> <span class="bold">Date Read: </span>
                                     <%= book.date %>
                                 </p>
-                                <p> <span class="bold">Notes: </span>
-                                    <%= book.notes %>
+
+                                <p>
+                                <form action="/read-page" method="post">
+                                    <input type="hidden" name="id" value=<%=book.id %> />
+                                    <button class="button padding-button" type="submit">Read
+                                        Note</button>
+                                </form>
                                 </p>
                             </div>
 
@@ -53,7 +59,7 @@
                                     <input type="hidden" name="date" value="<%= book.date %>" />
                                     <input type="hidden" name="notes" value="<%= book.notes %>" />
 
-                                    <button class="button padding-button margin-right-less" type="submit">Edit</button>
+                                    <button class="button padding-button margin-right" type="submit">Edit</button>
                                 </form>
 
                                 <form action="/delete-book" method="post">

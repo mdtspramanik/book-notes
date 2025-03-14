@@ -50,6 +50,7 @@ const getSortedBooks = async (sortedBy, res) => {
     }
 
     const result = await client.query(query);
+
     let books = result.rows;
 
     // Format the date as "Month Day, Year"
@@ -71,6 +72,7 @@ app.get("/", async (req, res) => {
 
   try {
     const result = await client.query("SELECT * FROM book ORDER BY id DESC");
+
     let books = result.rows;
 
     // Format the date as "Month Day, Year"
@@ -94,7 +96,8 @@ app.get("/find-page", (req, res) => {
 
 // Handle search request from find-page.ejs file
 app.post("/find-book", (req, res) => {
-  const isbn = req.body.find;
+  const { isbn } = req.body;
+
   const imageUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`;
 
   res.render("find-page.ejs", { imageUrl, isbn, message: "" });
@@ -161,7 +164,9 @@ app.post("/edit-page", (req, res) => {
   let { date } = req.body;
 
   const localDate = new Date();
-  const offset = localDate.getTimezoneOffset(); // Get timezone offset in minutes
+  const offset = localDate.getTimezoneOffset();
+
+  // Adjust the local time to remove the timezone offset (convert it to UTC)
   const adjustedDate = new Date(localDate.getTime() - offset * 60000)
     .toISOString()
     .split("T")[0];
@@ -217,7 +222,7 @@ app.post("/delete-book", async (req, res) => {
 
 // Handle searching for a book by ISBN in the database
 app.post("/search-book", async (req, res) => {
-  const isbn = req.body.search;
+  const { isbn } = req.body;
 
   const client = await db.connect();
 
@@ -225,6 +230,7 @@ app.post("/search-book", async (req, res) => {
     const result = await client.query("SELECT * FROM book WHERE isbn = $1", [
       isbn,
     ]);
+
     let books = result.rows;
 
     // Format the date as "Month Day, Year"
@@ -268,9 +274,29 @@ app.get("/oldest", async (req, res) => {
   res.render("index.ejs", { books });
 });
 
-// Render read-page.ejs file
-app.get("/read-book", async (req, res) => {
-  res.render("read-page.ejs");
+// Render read-page.ejs file with fetched data from the database
+app.post("/read-page", async (req, res) => {
+  const { id } = req.body;
+
+  const client = await db.connect();
+
+  try {
+    const result = await client.query("SELECT * FROM book WHERE id = $1", [id]);
+
+    let book = result.rows;
+
+    // Format the date as "Month Day, Year"
+    book = book.map((book) => ({
+      ...book,
+      date: formatDate(book.date),
+    }));
+
+    res.render("read-page.ejs", { book });
+  } catch (error) {
+    res.status(500).send("Error fetching books from the database.");
+  } finally {
+    client.release();
+  }
 });
 
 // Start the server on the specified port
