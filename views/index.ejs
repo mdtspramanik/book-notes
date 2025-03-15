@@ -62,7 +62,7 @@
                                     <button class="button padding-button margin-right" type="submit">Edit</button>
                                 </form>
 
-                                <form action="/delete-book" method="post">
+                                <form action="/delete-book" method="post" onsubmit="return confirmDelete(event)">
                                     <input type="hidden" name="id" value=<%=book.id %> />
                                     <button class="button padding-button red" type="submit">Delete</button>
                                 </form>
@@ -72,5 +72,17 @@
                             <% } %>
         </div>
     </main>
+
+    <script>
+        function confirmDelete(event) {
+            const userConfirmed = confirm('Are you sure you want to delete this book?');
+
+            if (!userConfirmed) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+    </script>
 
     <%- include("partials/footer.ejs") %>

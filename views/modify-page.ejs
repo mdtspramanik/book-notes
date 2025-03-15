@@ -26,7 +26,7 @@
                         required>
                 </div>
                 <div class="card-body">
-                    <label for="notes">Notes (up to 12,000 characters):</label>
+                    <label for="notes">Notes (up to 25,000 characters):</label>
 
                     <!-- Quill Editor Container -->
                     <div id="editor"></div>
@@ -76,10 +76,10 @@
                 document.getElementById("hiddenNotes").value = sanitizedContent;
             };
 
-            // Prevent notes from exceeding 12,000 characters
+            // Prevent notes from exceeding 50,000 characters
             quill.on('text-change', function () {
-                if (quill.getLength() > 12000) {
-                    quill.deleteText(12000, quill.getLength());
+                if (quill.getLength() > 25000) {
+                    quill.deleteText(25000, quill.getLength());
                 }
             });
         });
