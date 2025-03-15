@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/mdtspramanik/book-notes#readme",
   "dependencies": {
+    "dompurify": "^3.2.4",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
+    "jsdom": "^26.0.0",
     "pg": "^8.13.3"
   }
 }

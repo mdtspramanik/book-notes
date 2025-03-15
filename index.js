@@ -1,6 +1,8 @@
 import express from "express";
 import pg from "pg";
 import dotenv from "dotenv";
+import { JSDOM } from "jsdom";
+import DOMPurify from "dompurify";
 
 // Load environment variables from the .env file
 dotenv.config();
@@ -22,6 +24,10 @@ app.use(express.static("public"));
 
 // Middleware for parsing URL-encoded data
 app.use(express.urlencoded({ extended: true }));
+
+// Set up DOMPurify with JSDOM
+const window = new JSDOM("").window;
+const createDOMPurify = DOMPurify(window);
 
 // Function to format date as "Month Day, Year"
 const formatDate = (date) => {
@@ -140,7 +146,8 @@ app.post("/add-page", async (req, res) => {
 
 // Handle adding a book to the database
 app.post("/add-book", async (req, res) => {
-  const { isbn, rating, date, notes } = req.body;
+  const { isbn, rating, date } = req.body;
+  const notes = createDOMPurify.sanitize(req.body.notes); // Sanitize notes to prevent XSS attacks
 
   const client = await db.connect();
 
@@ -187,7 +194,8 @@ app.post("/edit-page", (req, res) => {
 
 // Handle updating a book in the database
 app.post("/edit-book", async (req, res) => {
-  const { isbn, rating, date, notes } = req.body;
+  const { isbn, rating, date } = req.body;
+  const notes = createDOMPurify.sanitize(req.body.notes); // Sanitize notes to prevent XSS attacks
 
   const client = await db.connect();
 

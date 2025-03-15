@@ -27,8 +27,12 @@
                 </div>
                 <div class="card-body">
                     <label for="notes">Notes (up to 12,000 characters):</label>
-                    <textarea class="input-box" name="notes" placeholder="Enter your notes"
-                        maxlength="12000"><%= notes %></textarea>
+
+                    <!-- Quill Editor Container -->
+                    <div id="editor"></div>
+
+                    <!-- Hidden input to store Quill content -->
+                    <input type="hidden" name="notes" id="hiddenNotes">
                 </div>
 
                 <div class="position-button">
@@ -39,5 +43,46 @@
             </form>
         </div>
     </main>
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    <!-- Include DOMPurify library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.3/purify.min.js"
+        integrity="sha512-Ll+TuDvrWDNNRnFFIM8dOiw7Go7dsHyxRp4RutiIFW/wm3DgDmCnRZow6AqbXnCbpWu93yM1O34q+4ggzGeXVA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const quill = new Quill("#editor", {
+                modules: {
+                    toolbar: [
+                        [{ header: [1, 2, false] }],
+                        ['bold', 'italic', 'underline'],
+                    ],
+                },
+                placeholder: "Enter your notes...",
+                theme: "snow",
+            });
+
+            // Sanitize and Load Existing Notes into Quill
+            let rawNotes = `<%- notes %>`;  // EJS variable from backend
+            let cleanNotes = DOMPurify.sanitize(rawNotes); // Sanitize with DOMPurify
+            quill.root.innerHTML = cleanNotes; // Insert sanitized content into editor
+
+            // Update hidden input before form submission with sanitized data
+            document.querySelector("form").onsubmit = function () {
+                let sanitizedContent = DOMPurify.sanitize(quill.root.innerHTML)
+                document.getElementById("hiddenNotes").value = sanitizedContent;
+            };
+
+            // Prevent notes from exceeding 12,000 characters
+            quill.on('text-change', function () {
+                if (quill.getLength() > 12000) {
+                    quill.deleteText(12000, quill.getLength());
+                }
+            });
+        });
+    </script>
 
     <%- include("partials/footer.ejs") %>
