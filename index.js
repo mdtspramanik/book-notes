@@ -146,7 +146,17 @@ app.post("/add-page", async (req, res) => {
 
 // Handle adding a book to the database
 app.post("/add-book", async (req, res) => {
-  const { isbn, rating, date } = req.body;
+  const { isbn, date } = req.body;
+  const rating = parseFloat(req.body.rating);
+
+  // Validate rating
+  if (isNaN(rating) || rating < 0 || rating > 10) {
+    res
+      .status(400)
+      .send("Invalid rating. Please enter a number between 0 and 10.");
+    return;
+  }
+
   const notes = createDOMPurify.sanitize(req.body.notes); // Sanitize notes to prevent XSS attacks
 
   const client = await db.connect();
@@ -194,7 +204,17 @@ app.post("/edit-page", (req, res) => {
 
 // Handle updating a book in the database
 app.post("/edit-book", async (req, res) => {
-  const { isbn, rating, date } = req.body;
+  const { isbn, date } = req.body;
+  const rating = parseFloat(req.body.rating);
+
+  // Validate rating
+  if (isNaN(rating) || rating < 0 || rating > 10) {
+    res
+      .status(400)
+      .send("Invalid rating. Please enter a number between 0 and 10.");
+    return;
+  }
+
   const notes = createDOMPurify.sanitize(req.body.notes); // Sanitize notes to prevent XSS attacks
 
   const client = await db.connect();
