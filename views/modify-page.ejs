@@ -18,7 +18,7 @@
                     <label for="title">Rating (Out of 10) <span class="required"
                             title="This field is required.">*</span>:</label>
                     <input class="input-box" type="number" name="rating" value="<%= rating %>"
-                        placeholder="Enter your rating" required min="0" max="10" step="0.1">
+                        placeholder="Enter your rating">
                 </div>
                 <div class="card-body">
                     <label for="date">Date Read <span class="required" title="This field is required.">*</span>:</label>
@@ -32,7 +32,7 @@
                     <div id="editor"></div>
 
                     <!-- Hidden input to store Quill content -->
-                    <input type="hidden" name="notes" id="hiddenNotes">
+                    <input type="hidden" name="notes" id="hiddenNotes" required min="0" max="10" step="0.1">
                 </div>
 
                 <div class="position-button">
@@ -43,6 +43,18 @@
             </form>
         </div>
     </main>
+
+    <!-- Validate rating  -->
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            let rating = parseFloat(document.querySelector('[name="rating"]').value);
+
+            if (isNaN(rating) || rating < 0 || rating > 10) {
+                alert('Invalid rating! Must be between 0 and 10.');
+                e.preventDefault(); // Stop form submission
+            }
+        });
+    </script>
 
     <!-- Include the Quill library -->
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
