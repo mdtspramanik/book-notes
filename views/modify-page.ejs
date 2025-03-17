@@ -64,6 +64,10 @@
             const selectedDateRead = new Date(date_read_input.value);
             const today = new Date();
 
+            // Normalize both dates to remove the time difference
+            selectedDateRead.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+
             if (selectedDateRead > today) {
                 alert("The date read cannot be in the future.");
                 e.preventDefault();

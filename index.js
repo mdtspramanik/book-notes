@@ -165,6 +165,10 @@ app.post("/add-book", async (req, res) => {
   let date_read = new Date(req.body.date_read);
   const today = new Date();
 
+  // Normalize both dates to remove time differences
+  today.setHours(0, 0, 0, 0);
+  date_read.setHours(0, 0, 0, 0);
+
   // Validate rating
   if (isNaN(rating) || rating < 0 || rating > 10) {
     res
@@ -190,7 +194,7 @@ app.post("/add-book", async (req, res) => {
 
   date_read = `${yyyy}-${mm}-${dd}`;
 
-  const notes = createDOMPurify.sanitize(req.body.notes); // Sanitize notes to prevent XSS attacks
+  const notes = req.body.notes ? createDOMPurify.sanitize(req.body.notes) : ""; // Sanitize notes to prevent XSS attacks
 
   const client = await db.connect();
 
@@ -242,6 +246,10 @@ app.post("/edit-book", async (req, res) => {
   const rating = parseFloat(req.body.rating);
   let date_read = new Date(req.body.date_read);
   const today = new Date();
+
+  // Normalize both dates to remove time differences
+  today.setHours(0, 0, 0, 0);
+  date_read.setHours(0, 0, 0, 0);
 
   // Validate rating
   if (isNaN(rating) || rating < 0 || rating > 10) {
