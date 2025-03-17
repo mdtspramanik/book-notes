@@ -18,7 +18,7 @@
                 <%= book[0].rating %>
             </p>
             <p> <span class="bold">Date Read: </span>
-                <%= book[0].date %>
+                <%= book[0].date_read %>
             </p>
             <p> <span class="bold">Notes: </span>
                 <%- book[0].notes %>
@@ -29,7 +29,7 @@
             <form action="/edit-page" method="post">
                 <input type="hidden" name="isbn" value="<%= book[0].isbn %>" />
                 <input type="hidden" name="rating" value="<%= book[0].rating %>" />
-                <input type="hidden" name="date" value="<%= book[0].date %>" />
+                <input type="hidden" name="date_read" value="<%= book[0].date_read %>" />
                 <input type="hidden" name="notes" value="<%= book[0].notes %>" />
 
                 <button class="button padding-button margin-right" type="submit">Edit</button>

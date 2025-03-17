@@ -12,18 +12,19 @@
 
         <div class="card">
             <form action="<%= buttonText === 'Add' ? '/add-book' : '/edit-book' %>" method="post">
+                <input type="hidden" name="id" value="<%= id %>">
                 <input type="hidden" name="isbn" value="<%= isbn %>">
 
                 <div class="card-body">
                     <label for="title">Rating (Out of 10) <span class="required"
                             title="This field is required.">*</span>:</label>
                     <input class="input-box" type="number" name="rating" value="<%= rating %>"
-                        placeholder="Enter your rating">
+                        placeholder="Enter your rating" required min="0" max="10" step="0.1">
                 </div>
                 <div class="card-body">
                     <label for="date">Date Read <span class="required" title="This field is required.">*</span>:</label>
-                    <input class="input-box" type="date" name="date" value="<%= date %>" placeholder="Enter the date"
-                        required>
+                    <input class="input-box" type="date" name="date_read" value="<%= date_read %>"
+                        placeholder="Enter the date" required>
                 </div>
                 <div class="card-body">
                     <label for="notes">Notes (up to 25,000 characters):</label>
@@ -32,7 +33,7 @@
                     <div id="editor"></div>
 
                     <!-- Hidden input to store Quill content -->
-                    <input type="hidden" name="notes" id="hiddenNotes" required min="0" max="10" step="0.1">
+                    <input type="hidden" name="notes" id="hiddenNotes">
                 </div>
 
                 <div class="position-button">
@@ -51,7 +52,21 @@
 
             if (isNaN(rating) || rating < 0 || rating > 10) {
                 alert('Invalid rating! Must be between 0 and 10.');
-                e.preventDefault(); // Stop form submission
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <!-- Validate date read  -->
+    <script>
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const date_read_input = document.querySelector("[name='date_read']");
+            const selectedDateRead = new Date(date_read_input.value);
+            const today = new Date();
+
+            if (selectedDateRead > today) {
+                alert("The date read cannot be in the future.");
+                e.preventDefault();
             }
         });
     </script>

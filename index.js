@@ -29,14 +29,14 @@ app.use(express.urlencoded({ extended: true }));
 const window = new JSDOM("").window;
 const createDOMPurify = DOMPurify(window);
 
-// Function to format date as "Month Day, Year"
-const formatDate = (date) => {
-  return date
+// Function to format date_read as "Month Day, Year"
+const formatDate = (date_read) => {
+  return date_read
     ? new Intl.DateTimeFormat("en-US", {
         month: "long",
         day: "numeric",
         year: "numeric",
-      }).format(new Date(date))
+      }).format(new Date(date_read))
     : null;
 };
 
@@ -50,19 +50,19 @@ const getSortedBooks = async (sortedBy, res) => {
     if (sortedBy === "best") {
       query = "SELECT * FROM book ORDER BY rating DESC";
     } else if (sortedBy === "newest") {
-      query = "SELECT * FROM book ORDER BY date DESC";
+      query = "SELECT * FROM book ORDER BY date_read DESC";
     } else if (sortedBy === "oldest") {
-      query = "SELECT * FROM book ORDER BY date ASC";
+      query = "SELECT * FROM book ORDER BY date_read ASC";
     }
 
     const result = await client.query(query);
 
     let books = result.rows;
 
-    // Format the date as "Month Day, Year"
+    // Format the date_read as "Month Day, Year"
     books = books.map((book) => ({
       ...book,
-      date: formatDate(book.date),
+      date_read: formatDate(book.date_read),
     }));
     return books;
   } catch (error) {
@@ -81,10 +81,10 @@ app.get("/", async (req, res) => {
 
     let books = result.rows;
 
-    // Format the date as "Month Day, Year"
+    // Format the date_read as "Month Day, Year"
     books = books.map((book) => ({
       ...book,
-      date: formatDate(book.date),
+      date_read: formatDate(book.date_read),
     }));
 
     res.render("index.ejs", { books });
@@ -130,9 +130,10 @@ app.post("/add-page", async (req, res) => {
     } else {
       res.render("modify-page.ejs", {
         imageUrl,
+        id: "",
         isbn,
         rating: "",
-        date: "",
+        date_read: "",
         notes: "",
         buttonText: "Add",
       });
@@ -146,8 +147,10 @@ app.post("/add-page", async (req, res) => {
 
 // Handle adding a book to the database
 app.post("/add-book", async (req, res) => {
-  const { isbn, date } = req.body;
+  const { isbn } = req.body;
   const rating = parseFloat(req.body.rating);
+  let date_read = new Date(req.body.date_read);
+  const today = new Date();
 
   // Validate rating
   if (isNaN(rating) || rating < 0 || rating > 10) {
@@ -157,14 +160,31 @@ app.post("/add-book", async (req, res) => {
     return;
   }
 
+  // Validate date_read
+  if (isNaN(date_read.getTime()) || date_read > today) {
+    res
+      .status(400)
+      .send("Invalid date read. The date read cannot be in the future.");
+    return;
+  }
+
+  const dateObj = new Date(date_read);
+
+  // Extract date
+  const yyyy = dateObj.getFullYear();
+  const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const dd = String(dateObj.getDate()).padStart(2, "0");
+
+  date_read = `${yyyy}-${mm}-${dd}`;
+
   const notes = createDOMPurify.sanitize(req.body.notes); // Sanitize notes to prevent XSS attacks
 
   const client = await db.connect();
 
   try {
     await client.query(
-      "INSERT INTO book (isbn, rating, date, notes) VALUES ($1, $2, $3, $4)",
-      [isbn, rating, date, notes]
+      "INSERT INTO book (isbn, rating, date_read, notes) VALUES ($1, $2, $3, $4)",
+      [isbn, rating, date_read, notes]
     );
 
     res.redirect("/");
@@ -177,26 +197,26 @@ app.post("/add-book", async (req, res) => {
 
 // Render modify-page.ejs file with the image URL and ISBN for editing the book in the database
 app.post("/edit-page", (req, res) => {
-  const { isbn, rating, notes } = req.body;
-  let { date } = req.body;
+  const { id, isbn, rating, notes } = req.body;
+  let { date_read } = req.body;
 
-  const localDate = new Date();
-  const offset = localDate.getTimezoneOffset();
+  const dateObj = new Date(date_read);
 
-  // Adjust the local time to remove the timezone offset (convert it to UTC)
-  const adjustedDate = new Date(localDate.getTime() - offset * 60000)
-    .toISOString()
-    .split("T")[0];
+  // Extract date
+  const yyyy = dateObj.getFullYear();
+  const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const dd = String(dateObj.getDate()).padStart(2, "0");
 
-  date = adjustedDate;
+  date_read = `${yyyy}-${mm}-${dd}`;
 
   const imageUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`;
 
   res.render("modify-page.ejs", {
     imageUrl,
+    id,
     isbn,
     rating,
-    date,
+    date_read,
     notes,
     buttonText: "Update",
   });
@@ -204,8 +224,10 @@ app.post("/edit-page", (req, res) => {
 
 // Handle updating a book in the database
 app.post("/edit-book", async (req, res) => {
-  const { isbn, date } = req.body;
+  const { id, isbn } = req.body;
   const rating = parseFloat(req.body.rating);
+  let date_read = new Date(req.body.date_read);
+  const today = new Date();
 
   // Validate rating
   if (isNaN(rating) || rating < 0 || rating > 10) {
@@ -215,14 +237,31 @@ app.post("/edit-book", async (req, res) => {
     return;
   }
 
+  // Validate date_read
+  if (isNaN(date_read.getTime()) || date_read > today) {
+    res
+      .status(400)
+      .send("Invalid date read. The date read cannot be in the future.");
+    return;
+  }
+
+  const dateObj = new Date(date_read);
+
+  // Extract date
+  const yyyy = dateObj.getFullYear();
+  const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const dd = String(dateObj.getDate()).padStart(2, "0");
+
+  date_read = `${yyyy}-${mm}-${dd}`;
+
   const notes = createDOMPurify.sanitize(req.body.notes); // Sanitize notes to prevent XSS attacks
 
   const client = await db.connect();
 
   try {
     await client.query(
-      "UPDATE book SET rating = $1, date = $2, notes = $3 WHERE isbn = $4",
-      [rating, date, notes, isbn]
+      "UPDATE book SET isbn = $1, rating = $2, date_read = $3, notes = $4 WHERE id = $5",
+      [isbn, rating, date_read, notes, id]
     );
     res.redirect("/");
   } catch (error) {
@@ -261,10 +300,10 @@ app.post("/search-book", async (req, res) => {
 
     let books = result.rows;
 
-    // Format the date as "Month Day, Year"
+    // Format the date_read as "Month Day, Year"
     books = books.map((book) => ({
       ...book,
-      date: formatDate(book.date),
+      date_read: formatDate(book.date_read),
     }));
 
     res.render("index.ejs", { books });
@@ -316,7 +355,7 @@ app.post("/read-page", async (req, res) => {
     // Format the date as "Month Day, Year"
     book = book.map((book) => ({
       ...book,
-      date: formatDate(book.date),
+      date_read: formatDate(book.date_read),
     }));
 
     res.render("read-page.ejs", { book });
