@@ -107,10 +107,11 @@
                 document.getElementById("hiddenNotes").value = sanitizedContent;
             };
 
-            // Prevent notes from exceeding 50,000 characters
+            // Prevent notes from exceeding 25,000 characters
             quill.on("text-change", function () {
-                if (quill.getLength() > 25000) {
-                    quill.deleteText(25000, quill.getLength());
+                if (quill.getLength() > 25001) {  // Adjust for Quill’s extra newline
+                    alert("Notes cannot exceed 25,000 characters.");
+                    quill.deleteText(25000, quill.getLength());  // Remove excess text
                 }
             });
         });

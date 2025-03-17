@@ -196,6 +196,14 @@ app.post("/add-book", async (req, res) => {
 
   const notes = req.body.notes ? createDOMPurify.sanitize(req.body.notes) : ""; // Sanitize notes to prevent XSS attacks
 
+  console.log("Notes length:", notes.length);
+
+  //Validate notes
+  if (notes.length > 50000) {
+    res.status(400).send("Notes cannot exceed 25,000 characters.");
+    return;
+  }
+
   const client = await db.connect();
 
   try {
@@ -278,6 +286,14 @@ app.post("/edit-book", async (req, res) => {
 
   const notes = req.body.notes ? createDOMPurify.sanitize(req.body.notes) : ""; // Sanitize notes to prevent XSS attacks
 
+  console.log("Notes length:", notes.length);
+
+  //Validate notes
+  if (notes.length > 50000) {
+    res.status(400).send("Notes cannot exceed 25,000 characters.");
+    return;
+  }
+
   const client = await db.connect();
 
   try {
@@ -287,6 +303,7 @@ app.post("/edit-book", async (req, res) => {
     );
     res.redirect("/");
   } catch (error) {
+    console.log(error);
     res.status(500).send("Error updating book in the database.");
   } finally {
     client.release();
