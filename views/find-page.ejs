@@ -4,7 +4,7 @@
     </header>
     <main>
         <div class="margin-form">
-            <form action="/find-book" method="post">
+            <form id="isbn" action="/find-book" method="post">
                 <label for="search">Find a book:</label>
                 <input class="search-box" type="text" name="isbn" placeholder="Enter the ISBN (no dashes)" required
                     maxlength="13">
@@ -31,5 +31,18 @@
                 <p class="margin-left">Enter an ISBN above to find a book cover.</p>
                 <% } %>
     </main>
+
+    <!-- Validate rating  -->
+    <script>
+        document.getElementById("isbn").addEventListener("submit", function (e) {
+            const isbnInput = document.querySelector("[name='isbn']").value.trim();
+            const isbnNumber = Number(isbnInput);
+
+            if (isNaN(isbnNumber) || isbnInput.length > 13) {
+                alert('Invalid ISBN! Must be a number without dashes and max 13 characters.');
+                e.preventDefault();
+            }
+        });
+    </script>
 
     <%- include("partials/footer.ejs") %>

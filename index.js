@@ -104,6 +104,19 @@ app.get("/find-page", (req, res) => {
 app.post("/find-book", (req, res) => {
   const { isbn } = req.body;
 
+  const isbnString = isbn.trim();
+  const isbnNumber = Number(isbnString);
+
+  // Validate isbn
+  if (isNaN(isbnNumber) || isbnString.length > 13) {
+    res
+      .status(400)
+      .send(
+        "Invalid ISBN! Must be a number without dashes and max 13 characters."
+      );
+    return;
+  }
+
   const imageUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`;
 
   res.render("find-page.ejs", { imageUrl, isbn, message: "" });
@@ -290,6 +303,19 @@ app.post("/delete-book", async (req, res) => {
 // Handle searching for a book by ISBN in the database
 app.post("/search-book", async (req, res) => {
   const { isbn } = req.body;
+
+  const isbnString = isbn.trim();
+  const isbnNumber = Number(isbnString);
+
+  // Validate isbn
+  if (isNaN(isbnNumber) || isbnString.length > 13) {
+    res
+      .status(400)
+      .send(
+        "Invalid ISBN! Must be a number without dashes and max 13 characters"
+      );
+    return;
+  }
 
   const client = await db.connect();
 

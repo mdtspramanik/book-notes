@@ -47,11 +47,11 @@
 
     <!-- Validate rating  -->
     <script>
-        document.querySelector('form').addEventListener('submit', function (e) {
-            let rating = parseFloat(document.querySelector('[name="rating"]').value);
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const ratingInput = parseFloat(document.querySelector("[name='rating']").value);
 
-            if (isNaN(rating) || rating < 0 || rating > 10) {
-                alert('Invalid rating! Must be between 0 and 10.');
+            if (isNaN(ratingInput) || ratingInput < 0 || ratingInput > 10) {
+                alert("Invalid rating! Must be between 0 and 10.");
                 e.preventDefault();
             }
         });
@@ -93,18 +93,18 @@
             });
 
             // Sanitize and Load Existing Notes into Quill
-            let rawNotes = `<%- notes %>`;  // EJS variable from backend
-            let cleanNotes = DOMPurify.sanitize(rawNotes); // Sanitize with DOMPurify
+            const rawNotes = `<%- notes %>`;  // EJS variable from backend
+            const cleanNotes = DOMPurify.sanitize(rawNotes); // Sanitize with DOMPurify
             quill.root.innerHTML = cleanNotes; // Insert sanitized content into editor
 
             // Update hidden input before form submission with sanitized data
             document.querySelector("form").onsubmit = function () {
-                let sanitizedContent = DOMPurify.sanitize(quill.root.innerHTML)
+                const sanitizedContent = DOMPurify.sanitize(quill.root.innerHTML)
                 document.getElementById("hiddenNotes").value = sanitizedContent;
             };
 
             // Prevent notes from exceeding 50,000 characters
-            quill.on('text-change', function () {
+            quill.on("text-change", function () {
                 if (quill.getLength() > 25000) {
                     quill.deleteText(25000, quill.getLength());
                 }
