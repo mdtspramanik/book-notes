@@ -237,7 +237,8 @@ app.post("/edit-page", (req, res) => {
 
 // Handle updating a book in the database
 app.post("/edit-book", async (req, res) => {
-  const { id, isbn } = req.body;
+  const id = Number(req.body.id);
+  const { isbn } = req.body;
   const rating = parseFloat(req.body.rating);
   let date_read = new Date(req.body.date_read);
   const today = new Date();
@@ -267,7 +268,7 @@ app.post("/edit-book", async (req, res) => {
 
   date_read = `${yyyy}-${mm}-${dd}`;
 
-  const notes = createDOMPurify.sanitize(req.body.notes); // Sanitize notes to prevent XSS attacks
+  const notes = req.body.notes ? createDOMPurify.sanitize(req.body.notes) : ""; // Sanitize notes to prevent XSS attacks
 
   const client = await db.connect();
 
