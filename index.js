@@ -286,8 +286,6 @@ app.post("/edit-book", async (req, res) => {
 
   const notes = req.body.notes ? createDOMPurify.sanitize(req.body.notes) : ""; // Sanitize notes to prevent XSS attacks
 
-  console.log("Notes length:", notes.length);
-
   //Validate notes
   if (notes.length > 50000) {
     res.status(400).send("Notes cannot exceed 25,000 characters.");
