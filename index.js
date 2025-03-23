@@ -1,11 +1,11 @@
 import express from "express";
 import pg from "pg";
-import dotenv from "dotenv";
+import env from "dotenv";
 import { JSDOM } from "jsdom";
 import DOMPurify from "dompurify";
 
 // Load environment variables from the .env file
-dotenv.config();
+env.config();
 
 const app = express();
 const port = 3000;
