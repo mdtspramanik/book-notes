@@ -1,6 +1,6 @@
 # book-notes
 
-A book notes web app developed with Express.js, EJS, PostgreSQL, CSS, and Quill.js.
+A book notes web app developed with Express.js, EJS, PostgreSQL, CSS, Quill.js, and Open Library Covers API.
 
 ## How the Website Looks
 
