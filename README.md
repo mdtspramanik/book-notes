@@ -1,6 +1,10 @@
-# book-notes
+# Book Notes
 
 A book notes web app developed with Express.js, EJS, PostgreSQL, CSS, Quill.js, and Open Library Covers API.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## How the Website Looks
 
