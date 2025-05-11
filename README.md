@@ -6,7 +6,7 @@ A book notes web app developed with Express.js, EJS, PostgreSQL, CSS, Quill.js, 
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## How the Website Looks
+## How the Project Looks
 
 ![home-page-screenshot](https://github.com/user-attachments/assets/7b82bb86-e078-4781-9f66-740889f375fa)
 
